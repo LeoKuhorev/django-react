@@ -21,7 +21,7 @@ function App() {
 
   // Get items from DB
   const fetchTasks = async () => {
-    const response = await fetch("http://localhost:8000/api/v1/task-list/");
+    const response = await fetch("http://64.227.53.237/api/v1/task-list/");
     const data = await response.json();
     setTasks(data);
   };
@@ -54,10 +54,10 @@ function App() {
 
     try {
       const csrftoken = getCookie("csrftoken");
-      let url = "http://localhost:8000/api/v1/task-create";
+      let url = "http://64.227.53.237/api/v1/task-create";
 
       if (editing) {
-        url = `http://localhost:8000/api/v1/task-update/${activeItem.id}`;
+        url = `http://64.227.53.237/api/v1/task-update/${activeItem.id}`;
         setEditing(false);
       }
 
@@ -85,7 +85,7 @@ function App() {
 
   const deleteItem = async (task) => {
     const csrftoken = getCookie("csrftoken");
-    const url = `http://localhost:8000/api/v1/task-delete/${task.id}`;
+    const url = `http://64.227.53.237/api/v1/task-delete/${task.id}`;
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -105,7 +105,7 @@ function App() {
   const changeCompleted = async (task) => {
     task.completed = !task.completed;
     const csrftoken = getCookie("csrftoken");
-    const url = `http://localhost:8000/api/v1/task-update/${task.id}`;
+    const url = `http://64.227.53.237/api/v1/task-update/${task.id}`;
 
     try {
       await fetch(url, {
