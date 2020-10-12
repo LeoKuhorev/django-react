@@ -15,8 +15,9 @@ function App() {
 
   // Fetch items when component renders
   useEffect(() => {
+    console.log("Fetching...");
     fetchTasks();
-  });
+  }, [activeItem]);
 
   // Get items from DB
   const fetchTasks = async () => {
@@ -86,13 +87,16 @@ function App() {
     const csrftoken = getCookie("csrftoken");
     const url = `http://localhost:8000/api/v1/task-delete/${task.id}`;
     try {
-      await fetch(url, {
+      const response = await fetch(url, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": csrftoken,
         },
       });
+      if (response.status === 200) {
+        fetchTasks();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -112,6 +116,8 @@ function App() {
         },
         body: JSON.stringify(task),
       });
+
+      fetchTasks();
     } catch (error) {
       console.log(error);
     }
