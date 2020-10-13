@@ -45,10 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # My apps
     'api_v1.apps.ApiV1Config',
-    
+
     # 3rd party apps
     'rest_framework',
     'corsheaders',
@@ -58,12 +58,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    
+
     # CORS headers
     'corsheaders.middleware.CorsMiddleware',
     # Whitenoise
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -145,4 +145,6 @@ STATICFILES_DIRS = ['frontend/build/static']
 # Allowed hosts for CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://www.catherine.photography/",
+    "http://catherine.photography/",
 ]
