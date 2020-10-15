@@ -143,8 +143,4 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = ['frontend/build/static']
 
 # Allowed hosts for CORS
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://www.catherine.photography/",
-    "http://catherine.photography/",
-]
+CORS_ALLOWED_ORIGINS = tuple(env.list('CORS_ALLOWED_ORIGINS'))
