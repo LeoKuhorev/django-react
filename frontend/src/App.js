@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import Task from "./components/Task";
 
 function App() {
   const domain = "http://127.0.0.1:8000";
@@ -15,11 +16,17 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [editing, setEditing] = useState(false);
 
+  const fetcher = async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  };
+
   // Fetch items when component renders
   useEffect(() => {
     console.log("Fetching...");
     fetchTasks();
-  }, [activeItem]);
+  }, []);
 
   // Get items from DB
   const fetchTasks = async () => {
@@ -74,6 +81,7 @@ function App() {
 
       if (response.status === 200) {
         setActiveItem(defaultItem);
+        fetchTasks();
       }
     } catch (error) {
       console.log(error);
@@ -151,33 +159,13 @@ function App() {
 
         <div id="list-wrapper">
           {tasks.map((task) => (
-            <div className="task-wrapper flex-wrapper" key={task.id}>
-              <div style={{ flex: 7 }} onClick={() => changeCompleted(task)}>
-                {task.completed ? (
-                  <strike>{task.name}</strike>
-                ) : (
-                  <span>{task.name}</span>
-                )}
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <button
-                  className="btn btn-sm btn-outline-info"
-                  onClick={() => startEdit(task)}
-                >
-                  Edit
-                </button>
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <button
-                  className="btn btn-sm btn-outline-danger delete"
-                  onClick={() => deleteItem(task)}
-                >
-                  X
-                </button>
-              </div>
-            </div>
+            <Task
+              task={task}
+              startEdit={startEdit}
+              changeCompleted={changeCompleted}
+              deleteItem={deleteItem}
+              key={task.id}
+            />
           ))}
         </div>
       </div>
