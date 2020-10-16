@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Task(props) {
   const { task, changeCompleted, startEdit, deleteItem } = props;
-  
+
   return (
     <div className="task-wrapper flex-wrapper">
       <div style={{ flex: 7 }} onClick={() => changeCompleted(task)}>

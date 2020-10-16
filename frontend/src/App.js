@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import Task from "./components/Task";
+import Tasks from "./components/Tasks";
+import { css } from "@emotion/core";
+import PulseLoader from "react-spinners/ClipLoader";
 
 function App() {
   const domain = "http://127.0.0.1:8000";
@@ -12,15 +14,10 @@ function App() {
   };
 
   // State variables
-  const [activeItem, setActiveItem] = useState(defaultItem);
   const [tasks, setTasks] = useState([]);
+  const [activeItem, setActiveItem] = useState(defaultItem);
   const [editing, setEditing] = useState(false);
-
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const data = await response.json();
-    return data;
-  };
+  const [loading, setLoading] = useState(false);
 
   // Fetch items when component renders
   useEffect(() => {
@@ -30,8 +27,10 @@ function App() {
 
   // Get items from DB
   const fetchTasks = async () => {
+    setLoading(true);
     const response = await fetch(`${domain}/api/v1/task-list/`);
     const data = await response.json();
+    setLoading(false);
     setTasks(data);
   };
 
@@ -88,50 +87,11 @@ function App() {
     }
   };
 
-  const startEdit = (task) => {
-    setActiveItem(task);
-    setEditing(true);
-  };
-
-  const deleteItem = async (task) => {
-    const csrftoken = getCookie("csrftoken");
-    const url = `${domain}/api/v1/task-delete/${task.id}`;
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken,
-        },
-      });
-      if (response.status === 200) {
-        fetchTasks();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const changeCompleted = async (task) => {
-    task.completed = !task.completed;
-    const csrftoken = getCookie("csrftoken");
-    const url = `${domain}/api/v1/task-update/${task.id}`;
-
-    try {
-      await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken,
-        },
-        body: JSON.stringify(task),
-      });
-
-      fetchTasks();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const spinnerStyle = css`
+    display: block;
+    margin: 0 auto;
+    border-color: red;
+  `;
 
   return (
     <div className="container">
@@ -157,17 +117,18 @@ function App() {
           </form>
         </div>
 
-        <div id="list-wrapper">
-          {tasks.map((task) => (
-            <Task
-              task={task}
-              startEdit={startEdit}
-              changeCompleted={changeCompleted}
-              deleteItem={deleteItem}
-              key={task.id}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <PulseLoader css={spinnerStyle} size={50} loading={loading} />
+        ) : (
+          <Tasks
+            domain={domain}
+            setActiveItem={setActiveItem}
+            getCookie={getCookie}
+            setEditing={setEditing}
+            fetchTasks={fetchTasks}
+            tasks={tasks}
+          />
+        )}
       </div>
     </div>
   );
